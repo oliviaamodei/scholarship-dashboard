@@ -4,9 +4,8 @@
 
       <!-- Header -->
       <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-800 dark:text-slate-100">Scholarship Dashboard</h1>
-        <div class="flex items-center justify-between mt-1">
-          <p class="text-gray-500 dark:text-slate-400 leading-none">Applicant Overview</p>
+        <div class="flex items-center justify-between">
+          <h1 class="text-3xl font-bold text-gray-800 dark:text-slate-100">Scholarship Dashboard</h1>
           <div class="flex items-center gap-2">
             <span class="text-sm text-gray-500 dark:text-slate-400">{{ isDark ? 'Dark' : 'Light' }}</span>
             <button @click="toggleDark" class="relative inline-flex items-center w-10 h-5 rounded-full transition-colors focus:outline-none"
@@ -16,6 +15,11 @@
             </button>
           </div>
         </div>
+        <p class="text-gray-500 dark:text-slate-400 mt-1">Applicant Overview</p>
+        <nav class="flex gap-4 text-sm mt-2">
+          <span class="font-semibold text-gray-800 dark:text-slate-100">Dashboard</span>
+          <NuxtLink to="/summary" class="text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-100 transition-colors">Summary</NuxtLink>
+        </nav>
       </div>
 
       <!-- Search, Filter & Add -->
@@ -165,11 +169,7 @@ import { applicants as sourceApplicants, computeScore } from '~/composables/useA
 import type { Applicant } from '~/composables/useApplicants'
 
 // --- Dark mode ---
-const isDark = ref(false)
-function toggleDark() {
-  isDark.value = !isDark.value
-  document.documentElement.classList.toggle('dark', isDark.value)
-}
+const { isDark, toggleDark } = useDarkMode()
 
 // --- Reactive applicants list ---
 const applicants = ref<Applicant[]>(sourceApplicants.map(a => ({ ...a })))
