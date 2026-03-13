@@ -46,7 +46,7 @@
           </thead>
           <tbody>
             <tr
-              v-for="(applicant, index) in applicants"
+              v-for="(applicant, index) in sortedApplicants"
               :key="applicant.id"
               :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'"
               class="border-t border-gray-100 hover:bg-primary-50 transition-colors"
@@ -56,7 +56,7 @@
               <td class="px-6 py-4 text-gray-600">{{ applicant.essayScore }}</td>
               <td class="px-6 py-4 text-gray-600">{{ applicant.financialNeed }}</td>
               <td class="px-6 py-4 text-gray-600">{{ applicant.extracurricular }}</td>
-              <td class="px-6 py-4 font-semibold text-accent-600">—</td>
+              <td class="px-6 py-4 font-semibold text-accent-600">{{ computeScore(applicant).toFixed(1) }}</td>
             </tr>
           </tbody>
         </table>
@@ -66,6 +66,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 interface Applicant {
   id: number
   name: string
@@ -74,6 +75,15 @@ interface Applicant {
   financialNeed: number
   extracurricular: number
 }
+
+function computeScore(a: Applicant): number {
+  const gpaNormalized = (a.gpa / 4.0) * 100
+  return (gpaNormalized * 0.30) + (a.essayScore * 0.25) + (a.financialNeed * 0.25) + (a.extracurricular * 0.20)
+}
+
+const sortedApplicants = computed(() =>
+  [...applicants].sort((a, b) => computeScore(b) - computeScore(a))
+)
 
 const applicants: Applicant[] = [
   { id: 1,  name: 'Jordan Mitchell',   gpa: 3.8,  essayScore: 88, financialNeed: 72, extracurricular: 91 },
